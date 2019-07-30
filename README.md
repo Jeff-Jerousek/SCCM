@@ -11,16 +11,16 @@ this function allows to invoke a CMScript and pass parameters to it.
 ```PowerShell
 # parameters to send to the script
 $InputParameters = @{
-    fileName = 'C:\Temp\test.csv'
-    To = 'josh@burkard.it'
+    param1 = 'Test 1'
+    param2 = 'Test 2'
 }
 
 $Params = @{
-    SiteServer = 'server.fqdn.net'
-    SiteCode  = 'P00'
-    ScriptName = 'Test Script'
+    SiteServer        = 'server.fqdn.net'
+    SiteCode          = 'P00'
+    ScriptName        = 'Test Script'
     TargetResourceIDs = '11111111'
-    InputParameters = $InputParameters
+    InputParameters   = $InputParameters
 }
 Invoke-SCCMScript @Params
 ```
