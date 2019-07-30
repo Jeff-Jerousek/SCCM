@@ -58,10 +58,11 @@ function Invoke-SCCMScript {
         .NOTES
             File-Name:  Invoke-SCCMScript.ps1
             Author:     Josh Burkard - josh@burkard.it
-            Version:    0.1.00001
+            Version:    0.1.00002
 
             Changelog:
                 0.1.00001, 2019-07-29, Josh Burkard, initial creation
+                0.1.00002, 2019-07-30, Josh Burkard, changed Parameter validation
 
             Links:
                 https://github.com/joshburkard/SCCM
@@ -103,14 +104,9 @@ function Invoke-SCCMScript {
     # Parse the parameter definition
     $Parameters = [xml]([string]::new([Convert]::FromBase64String( $Script.ParamsDefinition ) ) )
 
-    $Parameters.ScriptParameters.ChildNodes | foreach {
+    $Parameters.ScriptParameters.ChildNodes | ForEach-Object {
         if ( ( $_.IsRequired ) -and ( $_.Name -notin $InputParameters.Keys ) ) {
             throw "Script '$( $ScriptName )' has required parameters '$( $_.Name )' but no parameters was passed."
-        }
-        if ( $_.Name -notin $InputParameters.Name) {
-            if ( [string]::IsNullOrEmpty( $_.DefaultValue ) ) {
-                throw "Parameter '$($_.Name)' has not been passed in InputParamters!"
-            }
         }
     }
 
@@ -124,7 +120,7 @@ function Invoke-SCCMScript {
     }
     else {
         $InnerParametersXML = ''
-        $Parameters.ScriptParameters.ChildNodes | foreach {
+        $Parameters.ScriptParameters.ChildNodes | ForEach-Object {
             $ParamName = $_.Name
             if ( $ParamName -notin $InputParameters.Keys ) {
                 if ( [string]::IsNullOrEmpty( $_.DefaultValue ) ) {
